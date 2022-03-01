@@ -27,8 +27,11 @@ public class App {
   }
 
   public static void main(String[] args) throws IOException, InterruptedException {
+    String hostName = System.getenv("APPCOPY_HOSTNAME");
     ManagedChannel managedChannel =
-        ManagedChannelBuilder.forAddress("localhost", 8081).usePlaintext().build();
+        ManagedChannelBuilder.forAddress(hostName != null ? hostName : "localhost", 8081)
+            .usePlaintext()
+            .build();
     GreeterCopyBlockingStub greeterCopyBlockingStub =
         GreeterCopyGrpc.newBlockingStub(managedChannel);
     int serverPort = 8080;
