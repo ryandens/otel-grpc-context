@@ -28,11 +28,12 @@ public class App {
 
   public static void main(String[] args) throws IOException, InterruptedException {
     ManagedChannel managedChannel =
-        ManagedChannelBuilder.forAddress("localhost", 8080).usePlaintext().build();
+        ManagedChannelBuilder.forAddress("localhost", 8081).usePlaintext().build();
     GreeterCopyBlockingStub greeterCopyBlockingStub =
         GreeterCopyGrpc.newBlockingStub(managedChannel);
+    int serverPort = 8080;
     Server server =
-        ServerBuilder.forPort(8080)
+        ServerBuilder.forPort(serverPort)
             .addService(
                 new GreeterImplBase() {
                   @Override
@@ -58,7 +59,7 @@ public class App {
                 })
             .build();
     server.start();
-    System.out.println("server started on port 8080");
+    System.out.println("server started on port " + serverPort);
     server.awaitTermination();
   }
 }
