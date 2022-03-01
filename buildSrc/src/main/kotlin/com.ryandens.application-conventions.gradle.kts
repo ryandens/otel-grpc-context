@@ -1,8 +1,11 @@
 plugins {
     application
     id("com.diffplug.spotless")
+    id("com.google.cloud.tools.jib")
 }
 
+
+jib.to.image = "ryandens/${project.name.toLowerCase()}"
 
 spotless {
     kotlinGradle {
