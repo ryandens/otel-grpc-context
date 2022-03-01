@@ -19,42 +19,46 @@ import org.hypertrace.example.GreeterGrpc.GreeterImplBase;
 import org.hypertrace.example.Helloworld;
 import org.hypertrace.example.Helloworld.Response;
 
-
 public class App {
-  private  static final ExecutorService executor = Executors.newFixedThreadPool(1);
+  private static final ExecutorService executor = Executors.newFixedThreadPool(1);
 
   public String getGreeting() {
-        return "Hello World!";
-    }
+    return "Hello World!";
+  }
 
-    public static void main(String[] args) throws IOException, InterruptedException {
-      ManagedChannel managedChannel = ManagedChannelBuilder.forAddress("localhost", 8080)
-          .usePlaintext()
-          .build();
-      GreeterCopyBlockingStub greeterCopyBlockingStub = GreeterCopyGrpc.newBlockingStub(
-          managedChannel);
-      Server server = ServerBuilder.forPort(8080).addService(new GreeterImplBase() {
-        @Override
-        public void sayHello(Helloworld.Request request,
-            StreamObserver<Helloworld.Response> responseObserver) {
-                String message = "Hello " + request.getName();
-                Response build = Response.newBuilder().setMessage(message).build();
-                responseObserver.onNext(build);
-                responseObserver.onCompleted();
-                receiveGreeting(request.getName());
-            }
+  public static void main(String[] args) throws IOException, InterruptedException {
+    ManagedChannel managedChannel =
+        ManagedChannelBuilder.forAddress("localhost", 8080).usePlaintext().build();
+    GreeterCopyBlockingStub greeterCopyBlockingStub =
+        GreeterCopyGrpc.newBlockingStub(managedChannel);
+    Server server =
+        ServerBuilder.forPort(8080)
+            .addService(
+                new GreeterImplBase() {
+                  @Override
+                  public void sayHello(
+                      Helloworld.Request request,
+                      StreamObserver<Helloworld.Response> responseObserver) {
+                    String message = "Hello " + request.getName();
+                    Response build = Response.newBuilder().setMessage(message).build();
+                    responseObserver.onNext(build);
+                    responseObserver.onCompleted();
+                    receiveGreeting(request.getName());
+                  }
 
-          public void receiveGreeting(String name) {
-            executor.execute(() -> {
-              CopyResponse copyResponse = greeterCopyBlockingStub.sayHelloCopy(
-                  CopyRequest.newBuilder().setName("fake").build());
-              System.out.println(copyResponse.getMessage());
-            });
-          }
-        }).build();
-        server.start();
-        System.out.println("server started on port 8080");
-        server.awaitTermination();
-
-    }
+                  public void receiveGreeting(String name) {
+                    executor.execute(
+                        () -> {
+                          CopyResponse copyResponse =
+                              greeterCopyBlockingStub.sayHelloCopy(
+                                  CopyRequest.newBuilder().setName("fake").build());
+                          System.out.println(copyResponse.getMessage());
+                        });
+                  }
+                })
+            .build();
+    server.start();
+    System.out.println("server started on port 8080");
+    server.awaitTermination();
+  }
 }

@@ -14,7 +14,6 @@ application {
 
 dependencies {
     implementation(project(":app"))
-    implementation("io.grpc:grpc-stub:${grpcVersion}")
-    implementation("io.grpc:grpc-protobuf:${grpcVersion}")
-
+    implementation("io.grpc:grpc-stub:$grpcVersion")
+    implementation("io.grpc:grpc-protobuf:$grpcVersion")
 }

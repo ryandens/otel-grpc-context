@@ -15,24 +15,23 @@ val grpcVersion = "1.44.1"
 val protocVersion = "3.19.2"
 
 dependencies {
-    implementation("io.grpc:grpc-protobuf:${grpcVersion}")
-    implementation("io.grpc:grpc-stub:${grpcVersion}")
+    implementation("io.grpc:grpc-protobuf:$grpcVersion")
+    implementation("io.grpc:grpc-stub:$grpcVersion")
     implementation("javax.annotation:javax.annotation-api:1.3.2")
-    runtimeOnly("io.grpc:grpc-netty-shaded:${grpcVersion}")
+    runtimeOnly("io.grpc:grpc-netty-shaded:$grpcVersion")
     javaagent("io.opentelemetry.javaagent:opentelemetry-javaagent:1.9.1")
     // Use JUnit Jupiter for testing.
     testImplementation("org.junit.jupiter:junit-jupiter:5.7.2")
 }
 
-
 protobuf {
     protoc {
-        this.artifact = "com.google.protobuf:protoc:${protocVersion}"
+        this.artifact = "com.google.protobuf:protoc:$protocVersion"
     }
 
     plugins {
         id("grpc") {
-            artifact = "io.grpc:protoc-gen-grpc-java:${grpcVersion}"
+            artifact = "io.grpc:protoc-gen-grpc-java:$grpcVersion"
         }
     }
     generateProtoTasks {
@@ -43,7 +42,6 @@ protobuf {
             }
         }
     }
-
 }
 
 // Inform IDEs like IntelliJ IDEA, Eclipse or NetBeans about the generated code.
