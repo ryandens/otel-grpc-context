@@ -18,6 +18,16 @@ services:
     image: ryandens/app:latest
     ports:
       - "8080"
+    depends_on:
+      - "app-copy"
+      - "otel-collector"
     environment:
       - APPCOPY_HOSTNAME=app-copy
       - OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector:4317
+
+  client:
+    image: ryandens/client:latest
+    depends_on:
+      - "app"
+    environment:
+      - APP_HOSTNAME=app

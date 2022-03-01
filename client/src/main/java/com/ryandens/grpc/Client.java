@@ -12,9 +12,13 @@ import org.hypertrace.example.Helloworld.Response;
 public final class Client {
 
   public static void main(final String[] args) throws InterruptedException {
-    System.out.println("Starting client");
+    String hostName = System.getenv("APP_HOSTNAME");
+    System.out.println("Starting client, waiting 3 seconds to send request to host " + hostName);
+    Thread.sleep(3000);
     ManagedChannel managedChannel =
-        ManagedChannelBuilder.forAddress("localhost", 8080).usePlaintext().build();
+        ManagedChannelBuilder.forAddress(hostName != null ? hostName : "localhost", 8080)
+            .usePlaintext()
+            .build();
     GreeterStub greeterStub = GreeterGrpc.newStub(managedChannel);
     CountDownLatch countDownLatch = new CountDownLatch(1);
     StreamObserver<Response> responseObserver =
