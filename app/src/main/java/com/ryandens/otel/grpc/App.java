@@ -3,12 +3,29 @@
  */
 package com.ryandens.otel.grpc;
 
+import io.grpc.Server;
+import io.grpc.ServerBuilder;
+import io.grpc.stub.StreamObserver;
+import java.io.IOException;
+import org.hypertrace.example.GreeterGrpc.GreeterImplBase;
+import org.hypertrace.example.Helloworld.Request;
+import org.hypertrace.example.Helloworld.Response;
+
 public class App {
     public String getGreeting() {
         return "Hello World!";
     }
 
-    public static void main(String[] args) {
-        System.out.println(new App().getGreeting());
+    public static void main(String[] args) throws IOException, InterruptedException {
+        Server server = ServerBuilder.forPort(8080).addService(new GreeterImplBase() {
+            @Override
+            public void sayHello(Request request, StreamObserver<Response> responseObserver) {
+                super.sayHello(request, responseObserver);
+            }
+        }).build();
+        server.start();
+        System.out.println("server started on port 8080");
+        server.awaitTermination();
+
     }
 }
