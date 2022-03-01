@@ -8,4 +8,4 @@
  */
 
 rootProject.name = "otel-grpc-context"
-include("app")
+include("app", "client")
