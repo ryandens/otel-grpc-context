@@ -4,7 +4,6 @@ plugins {
     // Apply the application plugin to add support for building a CLI application in Java.
     id("com.ryandens.application-conventions")
     id("com.google.protobuf") version "0.8.17"
-    id("com.ryandens.javaagent-application") version "0.2.2"
 }
 
 repositories {
@@ -19,7 +18,6 @@ dependencies {
     implementation("io.grpc:grpc-stub:$grpcVersion")
     implementation("javax.annotation:javax.annotation-api:1.3.2")
     runtimeOnly("io.grpc:grpc-netty-shaded:$grpcVersion")
-    javaagent("io.opentelemetry.javaagent:opentelemetry-javaagent:1.11.1")
     // Use JUnit Jupiter for testing.
     testImplementation("org.junit.jupiter:junit-jupiter:5.7.2")
 }
