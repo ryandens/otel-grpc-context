@@ -3,35 +3,40 @@
  */
 package com.ryandens.otel.grpc;
 
+import io.grpc.ManagedChannel;
+import io.grpc.ManagedChannelBuilder;
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
 import io.grpc.stub.StreamObserver;
 import java.io.IOException;
-import java.io.UncheckedIOException;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.net.http.HttpResponse.BodyHandlers;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import org.hypertrace.copy.example.Copyhelloworld.CopyRequest;
+import org.hypertrace.copy.example.Copyhelloworld.CopyResponse;
+import org.hypertrace.copy.example.GreeterCopyGrpc;
+import org.hypertrace.copy.example.GreeterCopyGrpc.GreeterCopyBlockingStub;
 import org.hypertrace.example.GreeterGrpc.GreeterImplBase;
-import org.hypertrace.example.Helloworld.Request;
+import org.hypertrace.example.Helloworld;
 import org.hypertrace.example.Helloworld.Response;
+
 
 public class App {
   private  static final ExecutorService executor = Executors.newFixedThreadPool(1);
-
-
 
   public String getGreeting() {
         return "Hello World!";
     }
 
     public static void main(String[] args) throws IOException, InterruptedException {
-        Server server = ServerBuilder.forPort(8080).addService(new GreeterImplBase() {
-          @Override
-            public void sayHello(Request request, StreamObserver<Response> responseObserver) {
+      ManagedChannel managedChannel = ManagedChannelBuilder.forAddress("localhost", 8080)
+          .usePlaintext()
+          .build();
+      GreeterCopyBlockingStub greeterCopyBlockingStub = GreeterCopyGrpc.newBlockingStub(
+          managedChannel);
+      Server server = ServerBuilder.forPort(8080).addService(new GreeterImplBase() {
+        @Override
+        public void sayHello(Helloworld.Request request,
+            StreamObserver<Helloworld.Response> responseObserver) {
                 String message = "Hello " + request.getName();
                 Response build = Response.newBuilder().setMessage(message).build();
                 responseObserver.onNext(build);
@@ -41,18 +46,9 @@ public class App {
 
           public void receiveGreeting(String name) {
             executor.execute(() -> {
-              final HttpResponse<String> httpResponse;
-              try {
-                httpResponse = HttpClient.newHttpClient()
-                    .send(HttpRequest.newBuilder().uri(URI.create("https://google.com")).build(),
-                        BodyHandlers.ofString());
-              } catch (IOException e) {
-                throw new UncheckedIOException(e);
-              } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-                throw new RuntimeException(e);
-              }
-              System.out.println("Backend: " + httpResponse.statusCode());
+              CopyResponse copyResponse = greeterCopyBlockingStub.sayHelloCopy(
+                  CopyRequest.newBuilder().setName("fake").build());
+              System.out.println(copyResponse.getMessage());
             });
           }
         }).build();

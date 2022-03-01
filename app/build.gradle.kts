@@ -22,6 +22,7 @@ dependencies {
     javaagent("io.opentelemetry.javaagent:opentelemetry-javaagent:1.9.1")
     // Use JUnit Jupiter for testing.
     testImplementation("org.junit.jupiter:junit-jupiter:5.7.2")
+    implementation(project(":appCopy"))
 }
 
 
