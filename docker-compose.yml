@@ -1,0 +1,23 @@
+version: "2"
+services:
+  otel-collector:
+    image: otel/opentelemetry-collector:0.45.0
+    command: ["--config=/etc/otel.yaml"]
+    volumes:
+      - ./otel-config.yaml:/etc/otel.yaml
+    ports:
+      - "4317"
+
+
+  app-copy:
+    image: ryandens/appcopy:latest
+    ports:
+      - "8081"
+
+  app:
+    image: ryandens/app:latest
+    ports:
+      - "8080"
+    environment:
+      - APPCOPY_HOSTNAME=app-copy
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector:4317
