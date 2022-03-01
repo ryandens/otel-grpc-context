@@ -1,5 +1,5 @@
 plugins {
-    application
+    id("com.ryandens.application-conventions")
 }
 repositories {
     // Use Maven Central for resolving dependencies.

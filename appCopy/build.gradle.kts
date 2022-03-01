@@ -2,7 +2,7 @@ import com.google.protobuf.gradle.*
 
 plugins {
     // Apply the application plugin to add support for building a CLI application in Java.
-    application
+    id("com.ryandens.application-conventions")
     id("com.google.protobuf") version "0.8.17"
     id("com.ryandens.javaagent-application") version "0.2.2"
 }
