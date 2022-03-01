@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package org.hypertrace.copy.example;
+
+service GreeterCopy {
+  rpc SayHelloCopy (CopyRequest) returns (CopyResponse) {
+  }
+
+  rpc Conversation (stream CopyResponse) returns (stream CopyResponse) {
+  }
+}
+
+message CopyRequest {
+  string name = 1;
+}
+
+message CopyResponse {
+  string message = 1;
+}
