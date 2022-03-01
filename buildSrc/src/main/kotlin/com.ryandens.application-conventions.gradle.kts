@@ -10,6 +10,7 @@ spotless {
     }
     java {
         googleJavaFormat()
+        targetExclude("build/**/*.java")
     }
 }
 
