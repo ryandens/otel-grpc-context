@@ -20,7 +20,7 @@ This starts up 4 docker containers with the following communication structure:
 
 ```mermaid
 graph TD;
-    client-->|Synchronous Communication|app;
+    client-->|Asynchronous Communication|app;
     app-->|Asynchronous Communication|appcopy;
     app-->|Exported Spans|otel-collector;
 ```
