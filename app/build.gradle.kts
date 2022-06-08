@@ -20,7 +20,8 @@ dependencies {
     implementation("io.grpc:grpc-stub:$grpcVersion")
     implementation("javax.annotation:javax.annotation-api:1.3.2")
     runtimeOnly("io.grpc:grpc-netty-shaded:$grpcVersion")
-    javaagent("io.opentelemetry.javaagent:opentelemetry-javaagent:1.11.1")
+    // javaagent("io.opentelemetry.javaagent:opentelemetry-javaagent:1.13.1")
+    javaagent("io.opentelemetry.javaagent:opentelemetry-javaagent:1.14.0")
     // Use JUnit Jupiter for testing.
     testImplementation("org.junit.jupiter:junit-jupiter:5.7.2")
     implementation(project(":appCopy"))
@@ -59,6 +60,7 @@ sourceSets {
 application {
     // Define the main class for the application.
     mainClass.set("com.ryandens.otel.grpc.App")
+    applicationDefaultJvmArgs = listOf("-Dotel.javaagent.debug=true")
 }
 
 tasks.named<Test>("test") {
